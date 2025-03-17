@@ -1,7 +1,10 @@
 Шаги выполнения тестового задания
 
-1. Установить VirtualBox
-2. Скачать дистрибутив Vargant (для РФ - wget http://ports.ubuntu.com/pool/universe/v/vagrant/vagrant_2.2.19+dfsg-1ubuntu1_all.deb) 
-3. Запустить Vargant
-4. Установить Docker
-5. Установить Docker-compose
+Выполнение: 
+1. Инициировал VM   
+2. Создал локальную конфигурацию  Ansible (у меня хостовая Windows, Ansible на ней можно запустить только локально) . 
+3. Создал директории для подключения Node exporter
+4. Создал  файлы конфигурации для подключения Prometheus и Grafana, подключения и автозапуска Node exporter
+5. Отредактировал Vagrantfile для работы с Ansible и пробросом необходимых для работы Prometheus и Grafana  портов.
+6. Написал ansible-playbook для провижининга VM
+7. Запустил VM (vagrant-up)
