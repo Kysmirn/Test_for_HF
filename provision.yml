@@ -1,0 +1,90 @@
+---
+- hosts: default
+  tasks:
+  - name: Installing docker
+    apt:
+      name: docker.io
+      state: present
+      update_cache: yes
+    become: true
+    
+  - name: Installing docker compose
+    get_url:
+      url: https://github.com/docker/compose/releases/download/v2.34.0/docker-compose-Linux-x86_64
+      dest: /usr/bin/docker-compose
+      mode: '0755'
+    become: true  
+
+  - name: Creating a directory for monitoring cogfiguration files
+    file:
+      path: /opt/prometheus_stack/
+      state: directory
+    become: true
+      
+  - name: Creating a directory for prometheus
+    file:
+      path: /opt/prometheus_stack/prometheus
+      state: directory
+    become: true
+      
+  - name: Creating a directory for grafana
+    file:
+      path: /opt/prometheus_stack/grafana/
+      state: directory
+    become: true
+    
+  - name: Make directory for grafana provisioning
+    file:
+      path: /opt/prometheus_stack/grafana/provisioning
+      state: directory
+    become: true
+    
+  - name: Copy file with owner and permissions for dashboards
+    copy:
+      src: dashboards
+      dest: /opt/prometheus_stack/grafana/provisioning
+    become: true 
+    
+  - name: Copy file with owner and permissions for datasources
+    copy:
+      src: datasources
+      dest: /opt/prometheus_stack/grafana/provisioning
+    become: true 
+    
+  - name: Copy file with owner and permissions for docker-compose
+    copy:
+      src: docker-compose.yml
+      dest: /opt/prometheus_stack
+    become: true
+    
+  - name: Install Node Exporter
+    apt:
+      name: prometheus-node-exporter
+      state: present
+    become: true
+    
+  - name: Start node-exporter
+    systemd:
+      name: prometheus-node-exporter
+      state: started
+      enabled: true
+    become: true
+    
+  - name: Creating configuration file for prometheus
+    copy:
+      dest: /opt/prometheus_stack/prometheus/prometheus.yml
+      content: |
+        global:
+          scrape_interval: 15s
+        scrape_configs:
+          - job_name: 'node_exporter'
+            static_configs:
+              - targets: ['host.docker.internal:9100']
+    become: true           
+        
+  - name: Start Prometheus and Grafana
+    command: docker-compose up -d
+    args:
+      chdir: /opt/prometheus_stack
+    become: true  
+  

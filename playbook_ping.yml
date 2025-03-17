@@ -1,0 +1,4 @@
+---
+- hosts: default
+  tasks:
+  - action: ping
