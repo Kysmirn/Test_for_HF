@@ -1,0 +1,33 @@
+# Vagrant
+
+.vagrant/
+
+# Logs
+
+*.log
+
+# macOS
+
+.DS_Store
+
+# VSCode
+
+.vscode/
+
+# JetBrains
+
+.idea/
+
+# Environment files
+
+.env
+
+# Terraform
+
+*.tfstate
+*.tfstate.backup
+
+# Temporary files
+
+*.tmp
+*.bak
